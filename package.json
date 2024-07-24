@@ -1,4 +1,11 @@
 {
     "name": "Redpanda Example",
-    "packageManager": "pnpm@8.6.11+sha1.35052eb3a470525c15ce915ca4f4012f44adfc18"
+    "packageManager": "pnpm@8.6.11+sha1.35052eb3a470525c15ce915ca4f4012f44adfc18",
+    "devDependencies": {
+        "@types/node": "20.12.13",
+        "eslint-plugin-isaacscript": "^3.12.2",
+        "import": "^0.0.6",
+        "prettier": "^3.2.5",
+        "typescript": "^5.4.5"
+    }
 }
