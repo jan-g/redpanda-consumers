@@ -1,0 +1,15 @@
+{
+    "name": "server",
+    "private": true,
+    "type": "module",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "node ./src/index.js"
+    },
+    "dependencies": {
+        "@fastify/autoload": "^5.8.2",
+        "fastify": "^4.27.0",
+        "fastify-plugin": "^4.5.1",
+        "kafkajs": "^2.2.4"
+    }
+}

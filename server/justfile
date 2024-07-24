@@ -1,0 +1,6 @@
+start:
+ pnpm start
+add *ARG:
+ pnpm add {{ARG}} 
+remove *ARG:
+ pnpm remove {{ARG}}

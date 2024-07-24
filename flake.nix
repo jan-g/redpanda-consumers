@@ -14,7 +14,12 @@
         pkgs,
         system,
         ...
-      }: {
+      }:let 
+      corepackEnable = pkgs.runCommand "corepack-enable" {} ''
+          mkdir -p $out/bin
+          ${pkgs.nodejs_20}/bin/corepack enable --install-directory $out/bin
+        '';
+      in {
         _module.args = import inputs.nixpkgs {
           inherit system;
           config = {
@@ -25,6 +30,7 @@
           default = pkgs.mkShell {
             buildInputs = with pkgs; [ 
               nodejs_20
+              corepackEnable
               docker-compose
               just
               redpanda-client
