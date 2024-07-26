@@ -35,23 +35,19 @@ export default fp(
 
         const errorTypes = ["unhandledRejection", "uncaughtException"];
         const signalTraps = ["SIGTERM", "SIGINT", "SIGUSR2"];
-
         errorTypes.forEach((type) => {
             process.on(type, async (e) => {
                 try {
-                    console.log(`process.on ${type}`);
-                    console.error(e);
                     console.log("Closing Redpanda connections...");
-                    console.log("num of consumers:", server.redpanda.consumers.length);
+                    console.log("num of consumers: ", server.redpanda.consumers.length);
                     const batch = [
                         server.redpanda.producer.disconnect(),
-                        server.redpanda.consumers.map(async (consumer) => {
+                        ...server.redpanda.consumers.map(async (consumer) => {
                             return consumer.disconnect();
                         }),
                     ];
 
-                    await Promise.all(batch);
-                    console.log("Redpanda connections closed!");
+                    await Promise.allSettled(batch);
                     process.exit(0);
                 } catch (_) {
                     process.exit(1);
@@ -60,25 +56,26 @@ export default fp(
         });
 
         signalTraps.forEach((type) => {
-            process.once(type, async () => {
+            process.on(type, async () => {
                 try {
                     console.log("Closing Redpanda connections...");
-                    console.log("num of consumers:", server.redpanda.consumers.length);
+                    console.log("num of consumers: ", server.redpanda.consumers.length);
                     const batch = [
                         server.redpanda.producer.disconnect(),
-                        server.redpanda.consumers.map(async (consumer) => {
+                        ...server.redpanda.consumers.map(async (consumer) => {
                             return consumer.disconnect();
                         }),
                     ];
 
-                    await Promise.all(batch);
+                    await Promise.allSettled(batch);
                     console.log("Redpanda connections closed!");
+                } catch (err) {
+                    console.error(err);
                 } finally {
-                    process.kill(process.pid, type);
+                    process.exit(0);
                 }
             });
         });
-
         server.log.info("Redpanda plugin registered!");
     },
     { name: "redpanda" },
